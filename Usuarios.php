@@ -8,29 +8,35 @@ $usuario = array('_id'=>'','nombreUser'=>'','email'=>'','nombre'=>'','apellido'=
 
 if ($_POST) {
 
-   // $id = $_POST['_id'];
+    //Update 
+    $id = $_POST['_id'];
 
-    //unset($_POST['_id']);
-    //if (strlen($id) > 2) {
-      //  $condicion = array('_id'=> new MongoDB\BSON\ObjectId($id));
-        //$usuarios->updateOne($condicion,$_POST);
-    
-    //}else{
-       
-        //$usuarios->insertOne($_POST); 
-    //}
+    unset($_POST['_id']);
+    if (strlen($id) > 2) {
 
-       
+        
+      $query = array('_id'=> new MongoDB\BSON\ObjectId($id));
+      $usuarios->updateMany($query,['$set' => $_POST]);
+      
+    }else{
+       //Insert
+      $usuarios->insertOne($_POST); 
+    }
 }else if (isset($_GET['usr'])) {
+    //Metodo Get
     $id = $_GET['usr'];
-//    var_dump($id);
+//var_dump($id);
     $query = array('_id'=> new MongoDB\BSON\ObjectId($id));
     $usr = $usuarios->findOne($query);
     if ($usr) {
         $usuario = $usr;
     }
 }
-    
+    //Eliminar
+    if (isset($_GET['del'])) {
+        $id = new MongoDB\BSON\ObjectId($_GET['del']);
+        $usuarios->deleteOne(array('_id'=>$id));
+    }
 
 
 include("Nav.php");
@@ -87,6 +93,7 @@ include("Nav.php");
                             <td>{$usr['email']}</td> 
                             <td>
                                 <a class='btn btn-success' href='Usuarios.php?usr={$usr['_id']}'>Editar</button>
+                                <a onClick='return confirmarBorrar()' class='btn btn-danger' href='Usuarios.php?del={$usr['_id']}'>Eliminar</button>
                             </td>
                         </tr>";
                     }           
@@ -94,3 +101,8 @@ include("Nav.php");
                 ?>
             </tbody>
         </table>
+        <script>
+         function confirmarBorrar(){
+             return confirm("¿Seguro que desea borrar este usuario?")
+         }
+        </script>
