@@ -12,7 +12,13 @@ if ($_POST) {
         $obj = new stdClass();
         $obj->marca = $marca;
         $obj->modelo = $modelo;
-        $M_M->insertOne($obj);
+        if (strlen($k) > 2 ) {
+            $query = array('_id'=> new MongoDB\BSON\ObjectId($k));
+            $M_M->updateMany($query,['$set' => $obj]);
+        }else{
+            $M_M->insertOne($obj);
+        }
+        
     }
 
 }
@@ -24,7 +30,7 @@ include("Nav.php");
         <tr>
             <th>Marca</th>
             <th>Modelo</th>
-            <td><button type="button" onclick="addMarca('','');">+</button></td>
+            <td><button type="button" onclick="addMarca('','','');">+</button></td>
         </tr>
     </thead>
     <tbody id="tbMarcas">
@@ -39,7 +45,7 @@ include("Nav.php");
         tr =document.createElement('tr');
         td =document.createElement('td');
         txt = document.createElement('input');
-        txt.setAttribute('name', 'marca[]');
+        txt.setAttribute('name', 'marca['+_id+']');
         txt.type = 'text';
         txt.value= marca;
         txt.setAttribute('required','required');
@@ -51,7 +57,7 @@ include("Nav.php");
         
         td =document.createElement('td');
         txt = document.createElement('textarea');
-        txt.setAttribute('name', 'modelos[]');
+        txt.setAttribute('name', 'modelos['+_id+']');
         txt.value = modelo;
         txt.setAttribute('required','required');
         txt.setAttribute('class','form-control');
@@ -67,7 +73,7 @@ include("Nav.php");
 
         $datos = $M_M->find();
         foreach ($datos as $fila ) {
-            echo "addMarca('{$fila['marca']}','{$fila['modelo']}'); ";
+            echo "addMarca('{$fila['_id']}','{$fila['marca']}','{$fila['modelo']}'); ";
         }
     ?>
 </script>
