@@ -24,21 +24,52 @@ if ($_POST) {
 }
 include("Nav.php");
 ?>
-<form method="post" action="">
-<table class="table">
-    <thead>
-        <tr>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <td><button type="button" onclick="addMarca('','','');">+</button></td>
-        </tr>
-    </thead>
-    <tbody id="tbMarcas">
+<section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Marcas / Modelos</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
 
-    </tbody>
-    <button type="submimt">Guardar</button>
-</table>
-</form>
+    <!-- Main content -->
+    <style>
+.table-sortable tbody tr {
+    cursor: move;
+}
+</style>
+<section class="content">
+<div class="container">
+    <div class="row clearfix">
+    	<div class="col-md-12 table-responsive">
+        <form method="post" action="">
+			<table class="table table-bordered table-hover table-sortable" id="tab_logic">
+				<thead>
+					<tr >
+						<th class="text-center">
+							Marca
+						</th>
+						<th class="text-center">
+							Modelo
+						</th>
+                        <td><button type="button" onclick="addMarca('','','');">Añadir</button></td>
+        				<th class="text-center" style="border-top: 1px solid #ffffff; border-right: 1px solid #ffffff;">
+						</th>
+					</tr>
+				</thead>
+				<tbody id="tbMarcas">
+    				
+				</tbody>
+			</table>
+            <button type="submimt">Guardar</button>
+        </form>
+        
+		</div>
+	</div>
+	
+</div>
 <script>
     function addMarca(_id, marca, modelo){
         destino =document.getElementById('tbMarcas');
