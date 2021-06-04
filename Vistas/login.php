@@ -1,16 +1,51 @@
 <?php
 
-include('Librerias/session.php');
+include('../Modelo/session.php');
 $mensaje ="";
+
+$patron_texto = "/^[a-zA-ZáéíóúÁÉÍÓÚäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ\s]+$/";
+$patron_correo = "/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/";
+$patron_contra = "/^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/";
+
 if ($_POST) {
-   if ( verificarUsuario($_POST)) {
-       echo "<script> window.location='./' </script>";
-       exit();
-   }else{
-       $mensaje = "El usuario no existe";
-   }
-    
+	// Nombre:
+	 if( empty($_POST['nombreUser']) )
+	 $mensaje = "Nombre de usuario es requerido";
+	else
+	{
+		// Comprobar mediante una expresión regular, que sólo contiene letras y espacios:
+		 if( preg_match($patron_texto, $_POST['nombreUser']) ){
+
+			// Contraseña:
+			if( empty($_POST['contasena']) )
+			$mensaje = "La contraseña es requerida";
+			else
+			{
+				// Comprobar mediante una expresión regular, que sólo contiene letras y espacios:
+				if( preg_match($patron_contra, $_POST['contasena']) ){
+					if ( verificarUsuario($_POST)) {
+						echo "<script> window.location='./' </script>";
+						exit();
+					}else{
+						$mensaje = "El usuario no existe";
+					}
+				}else{
+					$mensaje = "Usuario y/o contraseña incorrecta";
+				}
+			}
+		 }else{
+			$mensaje = "Usuario y/o contraseña incorrecta";
+		 }
+	}
+
+
+
+		
+		 
 }
+
+
+
 include("Nav.php");
 ?>
 <style type="text/css">
@@ -107,14 +142,15 @@ include("Nav.php");
 							<div class="input-group-append">
 				                <span class="input-group-text-addon"><i class="fas fa-key"></i></span>
 		                    </div>
-			                    <input type="text" name="contasena" class="form-control input_pass" placeholder="password">
+			                    <input type="password" name="contasena" class="form-control input_pass" placeholder="password">
 			            </div>
                         <div class="error">
                             <?php echo $mensaje; ?>
                         </div>
 			   
 	<div class="d-flex justify-content-center mt-3 login_container">
- 	<button class="btn login_btn"type="submit">Entrar</button>
+ 	<button class="btn login_btn"type="submit" mb-1>Entrar</button>
+	 <a class="btn login_btn" href="RegistroLog.php">Registrarse</a>
     </form>
    </div>
 </div>
